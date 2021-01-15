@@ -1,32 +1,44 @@
-function binary(a){
+function binary(dec){
     var bits_list = [];
     var num, b;
-    while(a>0){
-        num =a;
+    while(dec>0){
+        num =dec;
 		b = num%2;
         bits_list.push(b);
         num = (num - num % b) / b;
-		a = a/2;
-		a.toString()
-		a = parseInt(a);
+		dec = dec/2;
+		dec.toString()
+		dec = parseInt(dec);
     }
     bits_list.reverse();
     return bits_list;
 }
 
-function shift(shiftA, shiftQ){
-    var val = shiftA.concat(shiftQ);
-    var l = val.length;
-    var i = 0;
-  
-   for(i = 0; i<l-1; i++){
-       val[i] = 0;
-       val[i] = val[i+1];
-   }
-   val.splice(i,1);
-   return val;
 
+function padM(x,b){
+    //if M < Q, pad
+    var arr = []
+    if(x.length < b.length){
+        var diff = b.length - x.length
+        for(var i = 0; i<=diff; i++){
+            arr.push(0);
+        }
+    }
+   //concat
+   for(i = 0; i<x.length;i++){
+       arr.push(x[i])
+   }
+    return arr;
 }
+
+function padQ(q){
+    var arr = [];
+    arr = [...q];
+    arr.unshift(0);
+    return arr;
+}
+
+
 
 function compliment(value){
     var onecomp = [];
@@ -106,6 +118,31 @@ function compliment(value){
      return add;
  }
 
+ function shiftLeftA(a,q){
+    //Remove the 1st element of A
+    //add the first element of Q
+    var first = q[0];
+    a.shift();
+    arr = [...a];
+    arr.push(first);
+
+    return arr;
+ }
+
+function shiftLeftQ(q){
+    var arr =[];
+    q.shift();
+    arr = [...q]
+    return arr;
+}
+
+function initializeA(q){
+    var arr = [];
+    for(var i = 0; i<=q.length; i++){
+        arr.push(0);
+    }
+    return arr;
+}
 
 function decimal(bin){
     bin.reverse();
@@ -119,84 +156,89 @@ function decimal(bin){
     return dec;
 
 }
-
-
-var dividend = 11;
-var divisor = 3;
-q=binary(dividend)
-m=binary(divisor)
-
-//SETTING THE M VALUE : i.e. len(M) should be 1 more than len(Q)
-if (m.length < q.length){
-	var diff = q.length - m.length
-	for(var i = 0; i<diff+1; i++){
-		m.splice(0,0,0)
-	}
+function checkifBinary(inputString){
+    if (inputString.match("^[01]+$")) {
+        return 1;
+    }
+    return 0;
 }
-console.log("Q: " + q);
-console.log("M: " + m);
-//ASSIGNING VALUE OF A to 0
-var ACC= []
-for(i= 0; i< m.length; i++){
-    ACC.push(0)
+
+function convert(val){
+    //if it is a decimal
+    var x = val;
+    var y;
+    var arr =[];
+    if(checkifBinary(x) == 0){
+        x = parseInt(x);
+        arr = binary(x);
+    }
+    else{
+        //it is already in binary form
+        for(var i = 0; i<val.length; i++){
+            y = parseInt(val[i])
+            arr.push(y);
+        }
+    }
+    return arr;
 }
-console.log("A : "+ ACC);
 
-//VALUE OF -M
-negM = compliment(m)
+/*Restoring Division Algorithm
+1.)initialize A,Q,M
+2.) Set -M
+- LOOP Q TIMES
+3.) Shift Left
+4.) A + (-M) = A-M
+5.) Check MSB if 1, Restore else, dont
+*/
 
-console.log("M: "+ negM)
+
+function restoringdivision(dividend,divisor){
+    var q = dividend;
+    var m = divisor;
+    var newA, newQ, sum, l;
+    q = convert(q);
+    q = padQ(q);
+    console.log("Q: "+ q);
+    var count = q.length;
+    m = convert(m);
+    m = padM(m,q);
+    console.log("M: "+ m);
+    negM = compliment(m);
+    var a = initializeA(q);
+    
+    console.log("          "+ "    |   "+ "   A    "+ "    |    "+"   Q  "+"    |    ")
+    console.log("--------------------------------------------------------")
+    for(var i = 0; i<count; i++){
+        l = i+1
+        newA = shiftLeftA(a,q);
+        newQ = shiftLeftQ(q);
+        console.log("New A: " + newA);
+        console.log("New Q: " + newQ);
+        sum = add(newA, negM);
+        console.log("sum: " +sum);
+        console.log("\n");
+        console.log("Step : "+ l+ "    |    "+ sum+ "    |    "+ newQ+ "  |  ")
+        console.log("--------------------------------------------------")
+        q = [...newQ];
+
+        if(sum[0]==0){
+            a = [...sum]
+            q.push(1);
+        }
+        else{
+            a = [...newA]
+            q.push(0);
+        }
+        
+        console.log("After   "+ "    |    "+ a+ "    |    "+ q+ "  |  ")
+        console.log("--------------------------------------------------")
+    }
+    console.log("Quotient:  ->  " + decimal(q));
+    console.log("Remainder:  ->  " + decimal(a));
+}
+console.log("Restoring Division Using Decimal Values");
+restoringdivision("12","5");
 console.log("\n");
-
-
-console.log("          "+ "    |   "+ "   A    "+ "    |    "+"   Q  "+"    |    ")
-console.log("--------------------------------------------------------")
-n=1
-//No of iterations
-counter = q.length;
-while(counter>0){
-	
-	//LEFT SHIFT A, Q
-	a = shift(ACC,q)
-    //console.log("A: "+ a);
-    //console.log("\n");
-
-	//TAKING THE "A" AND "Q" PART FROM THE "a"
-    newA = a.slice(0, ACC.length);
-
-    newQ = a.slice(ACC.length, a.length);
-    console.log("New A: "+ newA);
-	console.log("New Q: "+ newQ);
-
-	//A<-A-M
-	sumAM = add(newA,negM)
-    //console.log("sumAM: " +sumAM);
-    //console.log("\n");
-
-
-
-	b=newQ.length+1
-	if(sumAM[0]==1){//MSB(A)=1
-		newQ.splice(b,0,0)
-        sumAM=add(sumAM,m)
-    }
-	else if(sumAM[0]==0){
-        newQ.splice(b,0,1)
-    }
-
-	ACC=sumAM
-	q=newQ
-
-	console.log("Step : "+ n+ "    |    "+ ACC+ "    |    "+ q+ "  |  ")
-
-	console.log("--------------------------------------------------")
-	n=n+1
-    counter=counter-1
-}
-
-console.log("Quotient:  ->  " + decimal(q));
-console.log("Remainder:  ->  " + decimal(ACC));
-
-
-
-
+console.log("\n");
+console.log("Restoring Division Using Binary Values");
+restoringdivision("111","11");
