@@ -23,27 +23,27 @@ module.exports = {
     }
   }
 
-function binary(dec){
-    var bits_list = [];
-    var num, b;
-    while(dec>0){
-        num =dec;
-		b = num%2;
-        bits_list.push(b);
-        num = (num - num % b) / b;
-		dec = dec/2;
-		dec.toString()
-		dec = parseInt(dec);
-    }
-    bits_list.reverse();
-    return bits_list;
-}
+// function binary(dec){
+//     var bits_list = [];
+//     var num, b;
+//     while(dec>0){
+//         num =dec;
+// 		b = num%2;
+//         bits_list.push(b);
+//         num = (num - num % b) / b;
+// 		dec = dec/2;
+// 		dec.toString()
+// 		dec = parseInt(dec);
+//     }
+//     bits_list.reverse();
+//     return bits_list;
+// }
 
 
 function padM(x,b){
     //if M < Q, pad
     var arr = []
-    if(x.length < b.length){
+    if(x.length <= b.length){
         var diff = b.length - x.length
         for(var i = 0; i<=diff; i++){
             arr.push(0);
@@ -190,15 +190,11 @@ function checkifBinary(inputString){
 
 function convert(val){
     //if it is a decimal
-    var x = val;
     var y;
     var arr =[];
-    if(checkifBinary(x) == 0){
-        x = parseInt(x);
-        arr = binary(x);
-    }
-    else{
-        //it is already in binary form
+   
+    //
+    if(checkifBinary(val) ==1){
         for(var i = 0; i<val.length; i++){
             y = parseInt(val[i])
             arr.push(y);
@@ -222,7 +218,7 @@ function restoringdivision(dividend,divisor){
     var m = divisor;
     var newA, newQ, sum, l;
     q = convert(q);
-    q = padQ(q);
+    //q = padQ(q);
     console.log("Q: "+ q);
     var count = q.length;
     m = convert(m);
