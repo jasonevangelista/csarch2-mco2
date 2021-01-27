@@ -43,7 +43,7 @@
     <% } %>
 
     <% if(viewOption == "step-by-step"){ %>
-      <% steps.forEach((step, index) => { %>
+      <!-- <% steps.forEach((step, index) => { %>
         <tr>
             <td>Step <%= (index + 1) %>:</td>
             <br>
@@ -53,7 +53,21 @@
             <td>q: <%= step.q %></td>
         </tr>
         <br>
-      <% }) %>
+      <% }) %> -->
+      <button>Next Step</button>
+      <!-- <table class="table table-hovered" id="stepByStepTable">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Genre</th>
+            </tr>
+        </thead>
+        <tbody>
+           <tr>
+             <td></td>
+           </tr>
+        </tbody>
+    </table> -->
+
     <% } %>
   </div>
 <% } %>
