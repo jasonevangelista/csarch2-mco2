@@ -1,3 +1,28 @@
+module.exports = {
+    loadPage: (req, res) => {
+        res.render('index.ejs', { // Pass data to front end
+            title: "Restoring Division",
+            steps: false
+        });
+    },
+    calculate: (req,res) => {
+      console.log(req.body)
+  
+      // console.log("dividend: " + dividend)
+      // console.log("divisor: " + divisor)
+  
+      // console.log("hello")
+      var steps = restoringdivision(req.body.dividend, req.body.divisor);
+      console.log(steps)
+  
+      res.render('index.ejs', { // Pass data to front end
+        title: "Restoring Division",
+        steps: steps,
+        viewOption: req.body.viewOption
+      });
+    }
+  }
+
 function binary(dec){
     var bits_list = [];
     var num, b;
@@ -205,6 +230,8 @@ function restoringdivision(dividend,divisor){
     console.log("M: "+ m);
     negM = compliment(m);
     var a = initializeA(q);
+
+    var steps = [];
     
     console.log("          "+ "    |   "+ "   A    "+ "    |    "+"   Q  "+"    |    ")
     console.log("--------------------------------------------------------")
@@ -232,13 +259,21 @@ function restoringdivision(dividend,divisor){
         
         console.log("After   "+ "    |    "+ a+ "    |    "+ q+ "  |  ")
         console.log("--------------------------------------------------")
+        var step = {
+            newA: newA,
+            newQ: newQ,
+            a: a,
+            q: q
+        };
+        steps.push(step);
     }
     console.log("Quotient:  ->  " + decimal(q));
     console.log("Remainder:  ->  " + decimal(a));
+    return steps;
 }
-console.log("Restoring Division Using Decimal Values");
-restoringdivision("12","5");
-console.log("\n");
-console.log("\n");
-console.log("Restoring Division Using Binary Values");
-restoringdivision("111","11");
+// console.log("Restoring Division Using Decimal Values");
+// restoringdivision("12","5");
+// console.log("\n");
+// console.log("\n");
+// console.log("Restoring Division Using Binary Values");
+// restoringdivision("111","11");

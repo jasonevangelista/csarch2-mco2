@@ -1,21 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <% include partials/head %> 
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
 <!-- <% include partials/menu %> -->
 <div class="container-fluid bg-3 text-center">    
   <h3>Restoring Division Calculator</h3><br>
-  <form>
-    <input>
+  <form action="/restoringdivision/calculate" method="post">
+    <input type="number" class="form-control" name="dividend" placeholder="Dividend (in binary)">
+     ÷ 
+    <input type="number" class="form-control" name="divisor" placeholder="Divisor (in binary)">
     <br>
-    <input>
+    <label class="form-label">Display Option: </label>
+    <select class="form-control" name="viewOption" id="option">
+      <option value="all-steps">All Steps</option>
+      <option value="step-by-step">Step-by-step</option>
+    </select>
     <br>
-    <button>Calculate</button>
+    <input type="checkbox" name="textFileOutput"> <label> Output result in text file</label>
+    <br>
+    <input class="btn btn-primary" type="submit" value="Calculate">
   </form>
 </div>
 
+<% if (steps) { %>
+  <div>
+    <% if(viewOption == "all-steps"){ %>
+      <% steps.forEach((step, index) => { %>
+        <tr>
+            <td>Step <%= (index + 1) %>:</td>
+            <br>
+            <td>NewA: <%= step.newA %></td>
+            <td>NewQ: <%= step.newQ %></td>
+            <td>a: <%= step.a %></td>
+            <td>q: <%= step.q %></td>
+        </tr>
+        <br>
+      <% }) %>
+    <% } %>
+
+    <% if(viewOption == "step-by-step"){ %>
+      <% steps.forEach((step, index) => { %>
+        <tr>
+            <td>Step <%= (index + 1) %>:</td>
+            <br>
+            <td>NewA: <%= step.newA %></td>
+            <td>NewQ: <%= step.newQ %></td>
+            <td>a: <%= step.a %></td>
+            <td>q: <%= step.q %></td>
+        </tr>
+        <br>
+      <% }) %>
+    <% } %>
+  </div>
+<% } %>
+
 </body>
-<% include partials/script %>
 </html>
