@@ -236,11 +236,11 @@ function restoringdivision(dividend,divisor){
     var m = divisor;
     var newA, newQ, sum, l;
     q = convert(q);
-    q = padQ(q,m);
     console.log("Q: "+ q);
-    var count = q.length;
     m = convert(m);
+    q = padQ(q,m);
     m = padM(m,q);
+    var count = q.length;
     console.log("M: "+ m);
     negM = compliment(m);
     var a = initializeA(q);

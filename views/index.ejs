@@ -9,7 +9,7 @@
 <!-- <% include partials/menu %> -->
 <div class="container-fluid bg-3 text-center">    
   <h3>Restoring Division Calculator</h3><br>
-  <form action="/restoringdivision/calculate" method="post">
+  <form name="restoringDivisionForm" action="/restoringdivision/calculate" onsubmit="return validateForm()" method="post">
     <input type="number" class="form-control" name="dividend" placeholder="Dividend (in binary)">
      ÷ 
     <input type="number" class="form-control" name="divisor" placeholder="Divisor (in binary)">
@@ -30,17 +30,33 @@
   <button onClick="downloadFile('<%=fileContent%>')">Download Output in txt File</button>
   <div>
     <% if(viewOption == "all-steps"){ %>
-      <% steps.forEach((step, index) => { %>
-        <tr>
-            <td>Step <%= (index + 1) %>:</td>
-            <br>
-            <td>beforeA: <%= step.beforeA %></td>
-            <td>beforeQ: <%= step.beforeQ %></td>
-            <td>afterA: <%= step.afterA %></td>
-            <td>afterQ: <%= step.afterQ %></td>
-        </tr>
+
+      
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Step #</th>
+              <th scope="col">A (after subtract & restore)</th>
+              <th scope="col">Q (initial)</th>
+              <th scope="col">A (after pass)</th>
+              <th scope="col">Q (after pass)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% steps.forEach((step, index) => { %>
+            <tr>
+              <!-- <th scope="row">3</th> -->
+              <td><%= (index + 1) %></td>
+              <td><%= step.beforeA %></td>
+              <td><%= step.beforeQ %></td>
+              <td><%= step.afterA %></td>
+              <td><%= step.afterQ %></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
         <br>
-      <% }) %>
+      
     <% } %>
 
     <% if(viewOption == "step-by-step"){ %>
@@ -48,11 +64,37 @@
       <!-- <input type="button" onclick="embedElements()" id="btnNextStep"> -->
 
       <button onClick="embedElements('<%=steps.length%>')">Next Step</button>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Step #</th>
+              <th scope="col">A (after subtract & restore)</th>
+              <th scope="col">Q (initial)</th>
+              <th scope="col">A (after pass)</th>
+              <th scope="col">Q (after pass)</th>
+            </tr>
+          </thead>
+          <tbody>
         <% steps.forEach((step, index) => { %>
-          <!-- <div >
-
-          </div> -->
           <% if ( index == 0) {%>
+            <tr id="<%=index%>">
+          <% } else {%>
+            <!-- <tr id="<%=index%>" style="display: none;"> -->
+            <tr id="<%=index%>" style="visibility: hidden;">
+
+          <% } %>
+              <!-- <tr id="<%=index%>"> -->
+                <!-- <th scope="row">3</th> -->
+                <td><%= (index + 1) %></td>
+                <td><%= step.beforeA %></td>
+                <td><%= step.beforeQ %></td>
+                <td><%= step.afterA %></td>
+                <td><%= step.afterQ %></td>
+              </tr>
+            <!-- </div> -->
+            
+
+          <!-- <% if ( index == 0) {%>
           <div id="<%=index%>">
           <% } else {%>
             <div id="<%=index%>" style="display: none;">
@@ -64,10 +106,13 @@
                 <td>beforeQ: <%= step.beforeQ %></td>
                 <td>afterA: <%= step.afterA %></td>
                 <td>afterQ: <%= step.afterQ %></td>
-            </tr>
+            </tr> -->
           </div>
           <br>
         <% }) %>
+        </tbody>
+      </table>
+      
       <!-- <table class="table table-hovered" id="stepByStepTable">
         <thead class="thead-dark">
             <tr>
@@ -94,8 +139,11 @@
 
     if(num < stepLength){
       var currentDiv = document.getElementById(String(num));
-      if(currentDiv.style.display == "none"){
-        currentDiv.style.display = "block";
+      // if(currentDiv.style.display == "none"){
+      //   currentDiv.style.display = "inline";
+      // }
+      if(currentDiv.style.visibility == "hidden"){
+        currentDiv.style.visibility = "visible";
       }
       num++;
     }
@@ -121,7 +169,26 @@
     element.click();
 
     document.body.removeChild(element);
-}
+  }
+
+  function validateForm(){
+    var dividend = document.forms["restoringDivisionForm"]["dividend"].value;
+    var divisor = document.forms["restoringDivisionForm"]["divisor"].value;
+    var invalidChars = ["2", "3", "4", "5", "6", "7", "8", "9", ".", "+", "-"];
+
+    if(dividend.trim() == "" || divisor.trim() == ""){
+      alert("inputs cannot be empty!");
+      return false;
+    }
+    else if(invalidChars.some(el => dividend.toString().includes(el)) || invalidChars.some(el => divisor.toString().includes(el))){
+      alert("inputs can only be in binary!");
+      return false;
+    }
+    else if(dividend.toString().length > 16 || divisor.toString().length > 16){
+      alert("inputs only take a maximum of 16 bits!");
+      return false;
+    }
+  }
 
 
 </script>
