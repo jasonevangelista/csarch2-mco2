@@ -13,13 +13,28 @@ module.exports = {
   
       // console.log("hello")
       var steps = restoringdivision(req.body.dividend, req.body.divisor);
-      console.log(steps)
-  
-      res.render('index.ejs', { // Pass data to front end
+      console.log(steps);
+
+    //   if(req.body.textFileOutput){
+        console.log("download txt file");
+        var fileContent = generateFileContent(steps);
+
+        res.render('index.ejs', { // Pass data to front end
         title: "Restoring Division",
         steps: steps,
-        viewOption: req.body.viewOption
-      });
+        viewOption: req.body.viewOption,
+        fileContent: fileContent
+        });
+    //   }
+    //   else{
+    //     res.render('index.ejs', { // Pass data to front end
+    //         title: "Restoring Division",
+    //         steps: steps,
+    //         viewOption: req.body.viewOption
+    //     });
+    //   }
+  
+      
     }
   }
 
@@ -246,7 +261,6 @@ function restoringdivision(dividend,divisor){
         console.log("Step : "+ l+ "    |    "+ sum+ "    |    "+ newQ+ "  |  ")
         console.log("--------------------------------------------------")
         q = [...newQ];
-
         if(sum[0]==0){
             a = [...sum]
             q.push(1);
@@ -258,18 +272,50 @@ function restoringdivision(dividend,divisor){
         
         console.log("After   "+ "    |    "+ a+ "    |    "+ q+ "  |  ")
         console.log("--------------------------------------------------")
+
         var step = {
-            newA: newA,
-            newQ: newQ,
-            a: a,
-            q: q
+            stepNum: i+1,
+            beforeA: sum,
+            beforeQ: newQ,
+            afterA: a,
+            afterQ: q
         };
-        steps.push(step);
+
+        var currentStep = JSON.parse(JSON.stringify(step));
+        currentStep.beforeA = formatValue(currentStep.beforeA);
+        currentStep.beforeQ = formatValue(currentStep.beforeQ) + "_";
+
+        currentStep.afterA = formatValue(currentStep.afterA);
+        currentStep.afterQ = formatValue(currentStep.afterQ);
+
+        steps.push(currentStep);
+
     }
     console.log("Quotient:  ->  " + decimal(q));
     console.log("Remainder:  ->  " + decimal(a));
+    
     return steps;
 }
+
+function formatValue(value){
+    return value.toString().replace(/,/g, '');
+}
+
+function generateFileContent(steps){
+    var content = "";
+    content += "        "+ "    |   "+ "   A    "+ "    |    "+"   Q  "+"    |    N";
+    content += "--------------------------------------------------------N";
+    steps.forEach(step => {
+        content += "Step : "+ step.stepNum+ "    |    "+ step.beforeA+ "    |    "+ step.beforeQ+ "  |  N";
+        content += "--------------------------------------------------N";
+        content += "After   "+ "    |    "+ step.afterA+ "    |    "+ step.afterQ+ "  |  N";
+        content += "--------------------------------------------------N";
+    })
+    // console.log("txt file content")
+    // console.log(content)
+    return content;
+}
+
 // console.log("Restoring Division Using Decimal Values");
 // restoringdivision("12","5");
 // console.log("\n");

@@ -20,41 +20,54 @@
       <option value="step-by-step">Step-by-step</option>
     </select>
     <br>
-    <input type="checkbox" name="textFileOutput"> <label> Output result in text file</label>
+    <!-- <input type="checkbox" name="textFileOutput"> <label> Output result in text file</label> -->
     <br>
     <input class="btn btn-primary" type="submit" value="Calculate">
   </form>
 </div>
 
 <% if (steps) { %>
+  <button onClick="downloadFile('<%=fileContent%>')">Download Output in txt File</button>
   <div>
     <% if(viewOption == "all-steps"){ %>
       <% steps.forEach((step, index) => { %>
         <tr>
             <td>Step <%= (index + 1) %>:</td>
             <br>
-            <td>NewA: <%= step.newA %></td>
-            <td>NewQ: <%= step.newQ %></td>
-            <td>a: <%= step.a %></td>
-            <td>q: <%= step.q %></td>
+            <td>beforeA: <%= step.beforeA %></td>
+            <td>beforeQ: <%= step.beforeQ %></td>
+            <td>afterA: <%= step.afterA %></td>
+            <td>afterQ: <%= step.afterQ %></td>
         </tr>
         <br>
       <% }) %>
     <% } %>
 
     <% if(viewOption == "step-by-step"){ %>
-      <!-- <% steps.forEach((step, index) => { %>
-        <tr>
-            <td>Step <%= (index + 1) %>:</td>
-            <br>
-            <td>NewA: <%= step.newA %></td>
-            <td>NewQ: <%= step.newQ %></td>
-            <td>a: <%= step.a %></td>
-            <td>q: <%= step.q %></td>
-        </tr>
-        <br>
-      <% }) %> -->
-      <button>Next Step</button>
+      <div id="result"></div>
+      <!-- <input type="button" onclick="embedElements()" id="btnNextStep"> -->
+
+      <button onClick="embedElements('<%=steps.length%>')">Next Step</button>
+        <% steps.forEach((step, index) => { %>
+          <!-- <div >
+
+          </div> -->
+          <% if ( index == 0) {%>
+          <div id="<%=index%>">
+          <% } else {%>
+            <div id="<%=index%>" style="display: none;">
+          <% } %>
+            <tr>
+                <td>Step <%= (index + 1) %>:</td>
+                <br>
+                <td>beforeA: <%= step.beforeA %></td>
+                <td>beforeQ: <%= step.beforeQ %></td>
+                <td>afterA: <%= step.afterA %></td>
+                <td>afterQ: <%= step.afterQ %></td>
+            </tr>
+          </div>
+          <br>
+        <% }) %>
       <!-- <table class="table table-hovered" id="stepByStepTable">
         <thead class="thead-dark">
             <tr>
@@ -70,7 +83,48 @@
 
     <% } %>
   </div>
+
 <% } %>
+
+<script>
+  var num = 1;
+
+  function embedElements(length){
+    var stepLength = parseInt(length)
+
+    if(num < stepLength){
+      var currentDiv = document.getElementById(String(num));
+      if(currentDiv.style.display == "none"){
+        currentDiv.style.display = "block";
+      }
+      num++;
+    }
+  }
+
+  function downloadFile(content){
+    console.log("content:")
+    var newContent = content.replace(/N/g, '\n')
+    console.log(newContent)
+    var filename = "restoringdivision.txt";
+    
+    download(filename, newContent);
+  }
+
+  function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
+
+</script>
 
 </body>
 </html>
