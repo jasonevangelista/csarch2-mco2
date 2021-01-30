@@ -56,10 +56,12 @@ function padM(x,b){
     return arr;
 }
 
-function padQ(q){
+function padQ(q,m){
     var arr = [];
     arr = [...q];
-    arr.unshift(0);
+    while(arr.length<m.length){
+        arr.unshift(0);
+    }
     return arr;
 }
 
@@ -195,6 +197,7 @@ function convert(val){
    
     //
     if(checkifBinary(val) ==1){
+        val = val.replace(/^0+/, '');
         for(var i = 0; i<val.length; i++){
             y = parseInt(val[i])
             arr.push(y);
@@ -218,7 +221,7 @@ function restoringdivision(dividend,divisor){
     var m = divisor;
     var newA, newQ, sum, l;
     q = convert(q);
-    //q = padQ(q);
+    q = padQ(q,m);
     console.log("Q: "+ q);
     var count = q.length;
     m = convert(m);
