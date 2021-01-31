@@ -5,6 +5,8 @@
   .container-fluid {
       padding-top: 70px;
       padding-bottom: 70px;
+      padding-left: 100px;
+      padding-right: 100px;
   }
   .navbar {
       padding-top: 15px;
@@ -21,4 +23,17 @@
 
   .active>a {
     color: #1abc9c !important;;
+  }
+
+  .input-form{
+      padding-left: 200px;
+      padding-right: 200px;
+  }
+
+  .download-file{
+      margin: 15px;
+  }
+
+  h5{
+      margin: 0;
   }

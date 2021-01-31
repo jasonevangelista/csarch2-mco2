@@ -4,14 +4,19 @@
 
   <meta charset="utf-8">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <!-- <% include partials/menu %> -->
 <div class="container-fluid bg-3 text-center">    
   <h3>Restoring Division Calculator</h3><br>
-  <form name="restoringDivisionForm" action="/restoringdivision/calculate" onsubmit="return validateForm()" method="post">
+  <h5>CSARCH2 - S11 Group 10</h5><br>
+  <h5>Co, Sean Timothy</h5><br>
+  <h5>Evangelista, Jason</h5><br>
+  <h5>Reyes, Robin Jerome</h5><br>
+  <form class="input-form" name="restoringDivisionForm" action="/restoringdivision/calculate" onsubmit="return validateForm()" method="post">
     <input type="number" class="form-control" name="dividend" placeholder="Dividend (in binary)">
-     ÷ 
+    <br>
     <input type="number" class="form-control" name="divisor" placeholder="Divisor (in binary)">
     <br>
     <label class="form-label">Display Option: </label>
@@ -24,10 +29,10 @@
     <br>
     <input class="btn btn-primary" type="submit" value="Calculate">
   </form>
-</div>
+
 
 <% if (steps) { %>
-  <button onClick="downloadFile('<%=fileContent%>')">Download Output in txt File</button>
+  <button type="button" class="btn btn-secondary download-file" onClick="downloadFile('<%=fileContent%>')">Download Steps and Final Output (text file)</button>
   <div>
     <% if(viewOption == "all-steps"){ %>
 
@@ -63,7 +68,7 @@
       <div id="result"></div>
       <!-- <input type="button" onclick="embedElements()" id="btnNextStep"> -->
 
-      <button onClick="embedElements('<%=steps.length%>')">Next Step</button>
+      <button type="button" class="btn btn-success" onClick="embedElements('<%=steps.length%>')">Next Step</button>
         <table class="table">
           <thead>
             <tr>
@@ -130,6 +135,7 @@
   </div>
 
 <% } %>
+</div>
 
 <script>
   var num = 1;
