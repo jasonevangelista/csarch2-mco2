@@ -6,17 +6,8 @@ module.exports = {
         });
     },
     calculate: (req,res) => {
-      console.log(req.body)
-  
-      // console.log("dividend: " + dividend)
-      // console.log("divisor: " + divisor)
-  
-      // console.log("hello")
-      var steps = restoringdivision(req.body.dividend, req.body.divisor);
-      console.log(steps);
+        var steps = restoringdivision(req.body.dividend, req.body.divisor);
 
-    //   if(req.body.textFileOutput){
-        console.log("download txt file");
         var fileContent = generateFileContent(steps);
 
         res.render('index.ejs', { // Pass data to front end
@@ -25,16 +16,7 @@ module.exports = {
         viewOption: req.body.viewOption,
         fileContent: fileContent
         });
-    //   }
-    //   else{
-    //     res.render('index.ejs', { // Pass data to front end
-    //         title: "Restoring Division",
-    //         steps: steps,
-    //         viewOption: req.body.viewOption
-    //     });
-    //   }
-  
-      
+
     }
   }
 
@@ -236,30 +218,30 @@ function restoringdivision(dividend,divisor){
     var m = divisor;
     var newA, newQ, sum, l;
     q = convert(q);
-    console.log("Q: "+ q);
+    // console.log("Q: "+ q);
     m = convert(m);
     q = padQ(q,m);
     m = padM(m,q);
     var count = q.length;
-    console.log("M: "+ m);
+    // console.log("M: "+ m);
     negM = compliment(m);
     var a = initializeA(q);
 
     var steps = [];
     
-    console.log("          "+ "    |   "+ "   A    "+ "    |    "+"   Q  "+"    |    ")
-    console.log("--------------------------------------------------------")
+    // console.log("          "+ "    |   "+ "   A    "+ "    |    "+"   Q  "+"    |    ")
+    // console.log("--------------------------------------------------------")
     for(var i = 0; i<count; i++){
         l = i+1
         newA = shiftLeftA(a,q);
         newQ = shiftLeftQ(q);
-        console.log("New A: " + newA);
-        console.log("New Q: " + newQ);
+        // console.log("New A: " + newA);
+        // console.log("New Q: " + newQ);
         sum = add(newA, negM);
-        console.log("sum: " +sum);
-        console.log("\n");
-        console.log("Step : "+ l+ "    |    "+ sum+ "    |    "+ newQ+ "  |  ")
-        console.log("--------------------------------------------------")
+        // console.log("sum: " +sum);
+        // console.log("\n");
+        // console.log("Step : "+ l+ "    |    "+ sum+ "    |    "+ newQ+ "  |  ")
+        // console.log("--------------------------------------------------")
         q = [...newQ];
         if(sum[0]==0){
             a = [...sum]
@@ -270,8 +252,8 @@ function restoringdivision(dividend,divisor){
             q.push(0);
         }
         
-        console.log("After   "+ "    |    "+ a+ "    |    "+ q+ "  |  ")
-        console.log("--------------------------------------------------")
+        // console.log("After   "+ "    |    "+ a+ "    |    "+ q+ "  |  ")
+        // console.log("--------------------------------------------------")
 
         var step = {
             stepNum: i+1,
@@ -291,8 +273,8 @@ function restoringdivision(dividend,divisor){
         steps.push(currentStep);
 
     }
-    console.log("Quotient:  ->  " + decimal(q));
-    console.log("Remainder:  ->  " + decimal(a));
+    // console.log("Quotient:  ->  " + decimal(q));
+    // console.log("Remainder:  ->  " + decimal(a));
     
     return steps;
 }
